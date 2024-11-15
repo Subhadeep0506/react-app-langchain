@@ -20,8 +20,8 @@ import login from "@/services/auth/login";
 
 const LoginPage: React.FC = () => {
   const [showAlert, setShowAlert] = useState(false);
-  const [loginSuccess, setLoginSuccess] = useState(false)
-  const [loginStatusMessage, setLoinStatusMessage] = useState("")
+  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [loginStatusMessage, setLoinStatusMessage] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -29,9 +29,9 @@ const LoginPage: React.FC = () => {
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    var { success, message } = await login(username, password)
-    setLoginSuccess(success)
-    setLoinStatusMessage(message)
+    const { success, message } = await login(username, password);
+    setLoginSuccess(success);
+    setLoinStatusMessage(message);
     setShowAlert(true);
     setTimeout(() => {
       setShowAlert(false);
@@ -73,16 +73,32 @@ const LoginPage: React.FC = () => {
         <form onSubmit={handleLogin}>
           <Stack gap={4}>
             <Field label="Email/Username" errorText="This field is required">
-              <Input onChange={handleUsernameChange} value={username} type="text" placeholder="Email" required />
+              <Input
+                onChange={handleUsernameChange}
+                value={username}
+                type="text"
+                placeholder="Email"
+                required
+              />
             </Field>
             <Field label="Password" errorText="This field is required">
-              <PasswordInput onChange={handlePasswordChange} value={password} placeholder="Password" required />
+              <PasswordInput
+                onChange={handlePasswordChange}
+                value={password}
+                placeholder="Password"
+                required
+              />
             </Field>
             <Button type="submit" colorPalette="teal" size="lg">
               Login
             </Button>
             {showAlert && (
-              <Alert status={loginSuccess ? "success" : "error"} title={loginStatusMessage} variant="subtle" marginBottom={4} />
+              <Alert
+                status={loginSuccess ? "success" : "error"}
+                title={loginStatusMessage}
+                variant="subtle"
+                marginBottom={4}
+              />
             )}
             <HStack>
               <Text fontSize={12}>Don't have an account?</Text>
