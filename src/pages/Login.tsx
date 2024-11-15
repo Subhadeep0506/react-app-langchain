@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { Field } from "@/components/ui/field";
 import { Alert } from "@/components/ui/alert";
+import { PasswordInput } from "@/components/ui/password-input";
 import Logo from "../assets/logo.png";
 
 const LoginPage: React.FC = () => {
@@ -57,12 +58,12 @@ const LoginPage: React.FC = () => {
               <Input type="text" placeholder="Email" required />
             </Field>
             <Field label="Password" errorText="This field is required">
-              <Input type="password" placeholder="Password" required />
+              <PasswordInput type="password" placeholder="Password" required />
             </Field>
             <Button type="submit" colorPalette="teal" size="lg">
               Login
             </Button>
-            {showAlert && (
+              {showAlert && (
               <Alert
                 status="success"
                 variant="subtle"

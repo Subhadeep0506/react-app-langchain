@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import Logo from "../assets/logo.png";
 import { Field } from "@/components/ui/field";
+import { PasswordInput } from "@/components/ui/password-input";
 
 const SignupPage: React.FC = () => {
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
@@ -25,7 +26,7 @@ const SignupPage: React.FC = () => {
         maxW="md"
         mx="auto"
         p={6}
-        borderWidth={1}
+        borderWidth={2}
         borderRadius="lg"
         boxShadow="lg"
       >
@@ -51,16 +52,16 @@ const SignupPage: React.FC = () => {
               <Input type="email" placeholder="Email" required />
             </Field>
             <Field label="Password" errorText="This field is required">
-              <Input type="password" placeholder="Password" required />
+              <PasswordInput type="password" placeholder="Password" required />
             </Field>
             <Field label="Confirm password" errorText="This field is required">
-              <Input type="password" placeholder="Confirm Password" required />
+              <PasswordInput type="password" placeholder="Confirm Password" required />
             </Field>
             <Button type="submit" colorPalette="teal" size="lg">
               Signup
             </Button>
             <HStack>
-              <Text fontSize={12}>Don't have an account?</Text>
+              <Text fontSize={12}>Already have an account?</Text>
               <Link type="submit" fontSize={12} margin={0} fontWeight="bold">
                 Log in
               </Link>
