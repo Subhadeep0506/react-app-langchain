@@ -1,29 +1,48 @@
-const login = async (username: String, password: String) => {
-    try {
-        // const response = await fetch('http://localhost:8000/login', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({ username, password }),
-        // });
-        // if (!response.ok) {
-        //     throw new Error('Login failed');
-        // }
-        // const data = await response.json();
-        // localStorage.setItem('token', data.token);
-        // await new Promise((resolve) => setTimeout(resolve, 3000));
-        return {
-            success: false,
-            message: 'Login successful',
-        };
-    } catch (error) {
-        console.log('Login failed:', error);
-        return {
-            success: false,
-            message: `Login failed: ${error}`,
-        };
-    }
+import axios from "axios";
+
+function isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 }
+
+const login = async (username: string, password: string) => {
+  try {
+    const root_url: string | undefined = process.env.FASTAPI_URL;
+    var data = {};
+    if (isValidEmail(username)) {
+      data = {
+        email: username,
+        password: password,
+      };
+    } else {
+      data = {
+        username,
+        password,
+      };
+    }
+
+    const response = await axios.post(`${root_url}/login`, data);
+    localStorage.setItem("access_token", response.data.access_token);
+    localStorage.setItem("refresh_token", response.data.refresh_token);
+    return {
+      success: true,
+      message: "Login successful",
+    };
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        success: false,
+        message: `Login failed: ${
+          error.response?.data.detail || error.message
+        }`,
+      };
+    } else {
+      return {
+        success: false,
+        message: `Login failed: ${error}`,
+      };
+    }
+  }
+};
 
 export default login;

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
-  Button,
   Input,
   Stack,
   HStack,
@@ -12,6 +11,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { Alert } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button"
 import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
 import Logo from "../assets/logo.png";
@@ -24,14 +24,16 @@ const LoginPage: React.FC = () => {
   const [loginStatusMessage, setLoinStatusMessage] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
     const { success, message } = await login(username, password);
     setLoginSuccess(success);
     setLoinStatusMessage(message);
+    setIsLoading(false);
     setShowAlert(true);
     setTimeout(() => {
       setShowAlert(false);
@@ -89,9 +91,10 @@ const LoginPage: React.FC = () => {
                 required
               />
             </Field>
-            <Button type="submit" colorPalette="teal" size="lg">
-              Login
-            </Button>
+            <Button type="submit" colorPalette="teal" size="lg" loading={isLoading}>
+                Login
+              </Button>
+            
             {showAlert && (
               <Alert
                 status={loginSuccess ? "success" : "error"}
