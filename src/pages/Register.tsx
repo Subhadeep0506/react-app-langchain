@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -12,40 +11,36 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { Alert } from "@/components/ui/alert";
+import Logo from "../assets/logo.png";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
-import Logo from "../assets/logo.png";
+import { useForm } from "react-hook-form";
+import RegisterFormInputs from "@/interfaces/auth/register";
+import registerUser from "@/services/auth/register";
 
-import loginUser from "@/services/auth/login";
-
-interface LoginFormInputs {
-  username: string;
-  password: string;
-}
-
-const LoginPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
   const [showAlert, setShowAlert] = useState(false);
-  const [loginSuccess, setLoginSuccess] = useState(false);
-  const [loginStatusMessage, setLoginStatusMessage] = useState("");
+  const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [registerStatusMessage, setRegisterStatusMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
+  const { register, handleSubmit, formState: { errors } } = useForm<RegisterFormInputs>();
 
-  const onSubmit = async (data: LoginFormInputs) => {
+  const onSubmit = async (data: RegisterFormInputs) => {
     setIsLoading(true);
-    const { success, message } = await loginUser(data);
-    setLoginSuccess(success);
-    setLoginStatusMessage(message);
+    const { success, message } = await registerUser(data);
+    setRegisterSuccess(success);
+    setRegisterStatusMessage(message);
     setIsLoading(false);
     setShowAlert(true);
     setTimeout(() => {
       setShowAlert(false);
       if (success) {
-        navigate("/");
+        navigate("/login");
       }
-    }, 3000);
+    }, 3000); 
   };
 
   return (
@@ -54,7 +49,7 @@ const LoginPage: React.FC = () => {
         maxW="md"
         mx="auto"
         p={6}
-        borderWidth={1}
+        borderWidth={2}
         borderRadius="lg"
         boxShadow="lg"
       >
@@ -71,13 +66,19 @@ const LoginPage: React.FC = () => {
         <Text fontSize={14} marginBottom={6}>
           One stop for your daily News and Stocks info. Powered by AI.
         </Text>
-
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack gap={4}>
-            <Field label="Email/Username" errorText={errors.username ? "This field is required" : ""}>
+            <Field label="Username" errorText={errors.username ? "This field is required" : ""}>
               <Input
                 {...register("username", { required: true })}
                 type="text"
+                placeholder="Username"
+              />
+            </Field>
+            <Field label="Email" errorText={errors.email ? "This field is required" : ""}>
+              <Input
+                {...register("email", { required: true })}
+                type="email"
                 placeholder="Email"
               />
             </Field>
@@ -87,34 +88,33 @@ const LoginPage: React.FC = () => {
                 placeholder="Password"
               />
             </Field>
+            <Field label="Confirm Password" errorText={errors.confirmPassword ? "This field is required" : ""}>
+              <PasswordInput
+                {...register("confirmPassword", { required: true })}
+                placeholder="Confirm Password"
+              />
+            </Field>
             <Button type="submit" colorPalette="teal" size="lg" loading={isLoading}>
-              Login
+              Register
             </Button>
-
             {showAlert && (
               <Alert
-                status={loginSuccess ? "success" : "error"}
-                title={loginStatusMessage}
+                status={registerSuccess ? "success" : "error"}
+                title={registerStatusMessage}
                 variant="subtle"
                 marginBottom={4}
               />
             )}
             <HStack>
-              <Text fontSize={12}>Don't have an account?</Text>
-              <Link
-                fontSize={12}
-                margin={0}
-                fontWeight="bold"
-                onClick={() => navigate("/register")}
-              >
-                Register
+              <Text fontSize={12}>Already have an account?</Text>
+              <Link type="submit" fontSize={12} margin={0} fontWeight="bold" onClick={() => navigate("/login")}>
+                Log in
               </Link>
             </HStack>
           </Stack>
         </form>
       </Box>
-    </Flex>
-  );
+    </Flex>);
 };
 
-export default LoginPage;
+export default RegisterPage;

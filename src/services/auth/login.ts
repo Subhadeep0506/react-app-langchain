@@ -1,11 +1,13 @@
 import axios from "axios";
+import LoginFormInputs from "@/interfaces/auth/login";
 
 function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
 
-const login = async (username: string, password: string) => {
+const loginUser = async (formData: LoginFormInputs) => {
+  const { username, password } = formData
   try {
     const root_url: string | undefined = process.env.FASTAPI_URL;
     var data = {};
@@ -32,9 +34,8 @@ const login = async (username: string, password: string) => {
     if (axios.isAxiosError(error)) {
       return {
         success: false,
-        message: `Login failed: ${
-          error.response?.data.detail || error.message
-        }`,
+        message: `Login failed: ${error.response?.data.detail || error.message
+          }`,
       };
     } else {
       return {
@@ -45,4 +46,4 @@ const login = async (username: string, password: string) => {
   }
 };
 
-export default login;
+export default loginUser;
