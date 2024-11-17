@@ -4,11 +4,40 @@ import {
   Flex,
   Text,
   HStack,
-  Link,
+  IconButton
 } from '@chakra-ui/react';
+import {
+  MenuContent,
+  MenuItem,
+  MenuRoot,
+  MenuTrigger,
+} from "@/components/ui/menu"
+import { Toaster, toaster } from "@/components/ui/toaster"
 import CustomDrawer from '@/widgets/CustomDrawer';
+import { FaUser, FaUserEdit, FaSignOutAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import logoutUser from '@/services/auth/logout';
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate()
+
+  const handleMenuSelection = async (value: any) => {
+    const direction = value.value;
+    if (direction == "logout") {
+      const { success, message } = await logoutUser();
+      if (!success) {
+        toaster.create({
+          title: message,
+          type: "error",
+        })
+      } else {
+        navigate("/login");
+      }
+    } else {
+      navigate(direction);
+    }
+  }
+
   return (
     <Flex direction="column" height="100vh">
       <HStack
@@ -24,9 +53,26 @@ const Dashboard: React.FC = () => {
         <CustomDrawer />
         <Text fontSize="2xl" fontWeight="bold">Dashboard</Text>
         <HStack gap={4} marginLeft="auto">
-          <Link color="auto">Home</Link>
-          <Link color="auto">Profile</Link>
-          <Link color="auto">Settings</Link>
+          <MenuRoot onSelect={handleMenuSelection}>
+            <MenuTrigger asChild>
+              <HStack gap={1}>
+                <IconButton variant="ghost" size="sm">
+                  <FaUser />
+                </IconButton>
+                <Text>Username</Text>
+              </HStack>
+            </MenuTrigger>
+            <MenuContent>
+              <MenuItem value="profile" valueText="profile">
+                <FaUserEdit />
+                <Box flex="1">Profile</Box>
+              </MenuItem>
+              <MenuItem value="logout" valueText="logout">
+                <FaSignOutAlt />
+                <Box flex="1">LogOut</Box>
+              </MenuItem>
+            </MenuContent>
+          </MenuRoot>
         </HStack>
       </HStack>
 
@@ -35,6 +81,7 @@ const Dashboard: React.FC = () => {
           <Text>Main Content Area</Text>
         </Box>
       </Box>
+      <Toaster />
     </Flex>
   );
 };
