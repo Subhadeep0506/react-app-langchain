@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Flex,
@@ -20,6 +20,12 @@ import logoutUser from '@/services/auth/logout';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate()
+  const [username, setUsername] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    setUsername(storedUsername);
+  }, []);
 
   const handleMenuSelection = async (value: any) => {
     const direction = value.value;
@@ -30,6 +36,9 @@ const Dashboard: React.FC = () => {
           title: message,
           type: "error",
         })
+        setTimeout(() => {
+          navigate("/login");
+        }, 3000)
       } else {
         navigate("/login");
       }
@@ -59,7 +68,7 @@ const Dashboard: React.FC = () => {
                 <IconButton variant="ghost" size="sm">
                   <FaUser />
                 </IconButton>
-                <Text>Username</Text>
+                <Text>{username || "Username"}</Text>
               </HStack>
             </MenuTrigger>
             <MenuContent>

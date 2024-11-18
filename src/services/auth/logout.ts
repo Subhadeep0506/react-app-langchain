@@ -10,11 +10,17 @@ const logoutUser = async () => {
             },
         };
         const response = await axios.post(`${root_url}/me/logout`, {}, config);
-
-        return {
-            success: true,
-            message: response.data.message,
-        };
+        if (response.status == 200) {
+            return {
+                success: true,
+                message: response.data.message,
+            };
+        } else {
+            return {
+                success: false,
+                message: response.data.message,
+            };
+        }
     } catch (error) {
         if (axios.isAxiosError(error)) {
             return {

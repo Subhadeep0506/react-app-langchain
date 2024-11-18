@@ -1,5 +1,6 @@
 import axios from "axios";
 import LoginFormInputs from "@/interfaces/auth/login";
+import getUser from "./get_user";
 
 function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,10 +27,17 @@ const loginUser = async (formData: LoginFormInputs) => {
     const response = await axios.post(`${root_url}/login`, data);
     localStorage.setItem("access_token", response.data.access_token);
     localStorage.setItem("refresh_token", response.data.refresh_token);
-    return {
-      success: true,
-      message: "Login successful",
-    };
+    if (response.status == 200 && await getUser()) {
+      return {
+        success: true,
+        message: "Login successful",
+      };
+    } else {
+      return {
+        success: false,
+        message: response.data.message,
+      };
+    }
   } catch (error) {
     if (axios.isAxiosError(error)) {
       return {
