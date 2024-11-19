@@ -1,6 +1,6 @@
 import axios from "axios";
 import LoginFormInputs from "@/interfaces/auth/login";
-import getUser from "./get_user";
+import getUser from "./getUser";
 
 function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
